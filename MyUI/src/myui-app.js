@@ -30,10 +30,11 @@ let aaim = {
       do: {
         situation: "SelectOneOfMany",
         parameters: {
-          service: "urc",
-          name: "queryTargets",
+          service: "urc4esh", // service name changed: urc --> urc4esh
+          name: "queryThings", // methode name changed: queryTargets --> queryThings
           parameters: [
-            "http://openurc.org/TPL/coloured-light-bulb-1.0/ColouredLightBulbSocket"
+            //URI changed 
+            "http://localhost:8080/rest/things/hue:0210:001788285fd9:10"
           ],
           mapping: {
             name: "mapTargetsToMenu"
@@ -50,11 +51,11 @@ let aaim = {
       do: {
         situation: "AdjustLight",
         parameters: {
-          service: "urc",
+          service: "urc4esh", // service name changed: urc --> urc4esh
           name: "currentState",
           parameters: [
-            "${SelectOneOfMany.socketName}",
-            "${SelectOneOfMany.targetId}"
+            "${SelectOneOfMany.thingLabel}", // parameter socketName changed: --> thingLabel
+            "${SelectOneOfMany.channelLabel}" // parameter targetID changed: --> channelLabel
           ],
           mapping: {
             name: "mapUrcHSBtoColor"
@@ -66,11 +67,11 @@ let aaim = {
           on: "AdjustLight", 
           goto: "Adjust", 
           do: {
-            service: "urc",
+            service: "urc4esh",// service name changed: urc --> urc4esh
             name: "setState",
             parameters: [
-              "${SelectOneOfMany.socketName}",
-              "${SelectOneOfMany.targetId}",
+              "${SelectOneOfMany.thingLabel}", // parameter socketName changed: --> thingLabel
+              "${SelectOneOfMany.channelLabel}", // parameter targetID changed: --> channelLabel
               "${AdjustLight}"
             ],
             parameterMapping: [
@@ -112,8 +113,8 @@ let aaim = {
       do: {
         situation: "SelectOneOfMany",
         parameters: {
-          service: "urc",
-          name: "queryTargets",
+          service: "urc4esh", // service name changed: urc --> urc4esh
+          name: "queryThings", // methode name changed: queryTargets --> queryThings
           parameters: [
             "http://hdm-stuttgart.de/WoehlkeWebsteckdose/WoehlkeWebsteckdoseSocket"
           ],
@@ -132,11 +133,11 @@ let aaim = {
       do: {
         situation: "SwitchOutlets",
         parameters: {
-          service: "urc",
+          service: "urc4esh", // service name changed: urc --> urc4esh
           name: "currentState",
           parameters: [
-            "${SelectOneOfMany.socketName}",
-            "${SelectOneOfMany.targetId}"
+            "${SelectOneOfMany.thingLabel}", // parameter socketName changed: --> thingLabel
+            "${SelectOneOfMany.channelLabel}" // parameter targetID changed: --> channelLabel
           ],
           mapping: {
             name: "mapUrcSwitches"
@@ -148,11 +149,11 @@ let aaim = {
           on: "SwitchOutlets",
           goto: "Switch",
           do: {
-            service: "urc",
+            service: "urc4esh", // service name changed: urc --> urc4esh
             name: "setState",
             parameters: [
-              "${SelectOneOfMany.socketName}",
-              "${SelectOneOfMany.targetId}",
+              "${SelectOneOfMany.thingLabel}", // parameter socketName changed: --> thingLabel
+              "${SelectOneOfMany.channelLabel}", // parameter targetID changed: --> channelLabel
               "${SwitchOutlets}"
             ],
             parameterMapping: [
@@ -175,7 +176,7 @@ engine.register(smarthome.service);
 
 // Initialize the AaimBehavior and register aditional services
 let behavior = new myui.AaimBehavior(smarthome.factory, smarthome.service);
-behavior.registerService("urc", new myui.urc.UchService());
+behavior.registerService("urc4esh", new myui.urc.OpenhabService()); //<== service-Class changed: UchService() --> OpenhabService()
 behavior.registerService("asterics", new myui.asterics.AreService(areURI));
 
 // Create the AaimInterpreter and load the applications AAIM
